@@ -4,7 +4,6 @@ project(mutavive)
 
 add_executable(${CMAKE_PROJECT_NAME}
     src/main.cpp
-    src/vec3.cpp
     src/components.cpp
 )
 
@@ -25,4 +24,11 @@ set_target_properties(raylib
 
 target_link_libraries(${CMAKE_PROJECT_NAME}
     raylib
+)
+
+set_property(TARGET
+    ${CMAKE_PROJECT_NAME} 
+    PROPERTY
+    CXX_STANDARD
+    20
 )
