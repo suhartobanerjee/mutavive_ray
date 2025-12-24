@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 4.2.0)
 
-project(mutavive)
+project(mutavive
+    LANGUAGES
+    CXX
+)
+
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build)
+set(CMAKE_CXX_FLAGS "-Wall")
 
 add_executable(${CMAKE_PROJECT_NAME}
     src/main.cpp
@@ -8,27 +15,16 @@ add_executable(${CMAKE_PROJECT_NAME}
 )
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/dependencies/raylib-5.5_macos/include
     INTERFACE
 )
 
-set(RAYLIB_LOC ${CMAKE_SOURCE_DIR}/dependencies/raylib-5.5_macos/lib/libraylib.5.5.0.dylib)
-
 add_library(raylib SHARED IMPORTED)
 
-set_target_properties(raylib 
-    PROPERTIES
-    IMPORTED_LOCATION ${RAYLIB_LOC}
+set_target_properties(raylib PROPERTIES
+    IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/dependencies/raylib-5.5_macos/lib/libraylib.5.5.0.dylib
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME}
     raylib
-)
-
-set_property(TARGET
-    ${CMAKE_PROJECT_NAME} 
-    PROPERTY
-    CXX_STANDARD
-    20
 )
