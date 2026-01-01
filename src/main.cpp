@@ -1,6 +1,8 @@
 #include "components.h"
 #include "../dependencies/raylib-5.5_macos/include/raylib.h"
 #include "../dependencies/raylib-5.5_macos/include/raymath.h"
+#include <cmath>
+#include <cstdint>
 
 int main (int argc, char *argv[]) {
     SetConfigFlags(FLAG_VSYNC_HINT);
@@ -24,9 +26,19 @@ int main (int argc, char *argv[]) {
 
     Rectangle screen_rect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
+    const float_t asteroid_velocity_update = 30;
+    uint8_t level = 1;
+
     // Main game loop
     while (!WindowShouldClose())
     {
+        // updating asteroid speed as part of levelling up
+        if (floor(scoreboard.score / 10.0f) + 1 > level) {
+            level++;
+            for (int i = 0; i < n_asteroids; ++i) {
+                asteroids[i].velocity += asteroid_velocity_update;
+            }
+        }
         // 1. game state update phase
         spaceship.move();
         for (int i = 0; i < n_asteroids; i++) {
@@ -55,6 +67,9 @@ int main (int argc, char *argv[]) {
 
             // showing score
             DrawText(TextFormat("Score: %i", scoreboard.score), 10, 30, 20, MAROON);
+
+            // showing level
+            DrawText(TextFormat("Level: %i", level), 10, 50, 20, BLACK);
 
         EndDrawing();
     }
