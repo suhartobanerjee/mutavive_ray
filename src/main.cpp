@@ -4,6 +4,8 @@
 #include <cmath>
 #include <cstdint>
 
+const float_t PAUSE_TIMER = 1.;
+
 int main (int argc, char *argv[]) {
     SetConfigFlags(FLAG_VSYNC_HINT);
     SetConfigFlags(FLAG_MSAA_4X_HINT);
@@ -26,17 +28,40 @@ int main (int argc, char *argv[]) {
 
     Rectangle screen_rect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
-    const float_t asteroid_velocity_update = 30;
-    uint8_t level = 1;
+    uint8_t level = 0;
+    uint8_t highest_level = level;
+    float_t pause_timer = PAUSE_TIMER;
 
     // Main game loop
     while (!WindowShouldClose())
     {
+        // Checking for game over == score == 0
+        if (scoreboard.score < 0 && level > 0) {
+            float_t end_screen = 3.;
+            while (end_screen > 0) {
+                end_screen -= GetFrameTime();
+                BeginDrawing();
+                ClearBackground(GRAY);
+                DrawText(TextFormat("Game over! Highest level reached is: %i", highest_level), 300., SCREEN_HEIGHT / 2., 36, BLACK);
+                EndDrawing();
+            }
+            break;
+        }
         // updating asteroid speed as part of levelling up
         if (floor(scoreboard.score / 10.0f) + 1 > level) {
             level++;
+            highest_level = level;
+            while (pause_timer > 0) {
+                pause_timer -= GetFrameTime();
+                BeginDrawing();
+                ClearBackground(GRAY);
+                DrawText(TextFormat("Level: %i", level), SCREEN_WIDTH / 2. - 50., SCREEN_HEIGHT / 2., 36, BLACK);
+                EndDrawing();
+            }
+            pause_timer = PAUSE_TIMER;
+
             for (int i = 0; i < n_asteroids; ++i) {
-                asteroids[i].velocity += asteroid_velocity_update;
+                asteroids[i].velocity += ASTEROID_VELOCITY_UPDATE;
             }
         }
         // 1. game state update phase
@@ -45,7 +70,7 @@ int main (int argc, char *argv[]) {
             asteroids[i].move();
 
             spaceship.check_collison_update(asteroids[i], scoreboard);
-            earth.check_collison_update(asteroids[i], scoreboard);
+            earth.check_collison_update(asteroids[i], scoreboard, level);
         }
 
         // 2. Rendering phase

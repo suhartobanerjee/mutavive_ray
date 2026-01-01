@@ -22,6 +22,7 @@ const float_t EARTH_RADIUS = 1280. * 0.2;
 const double_t COLLISION_LAG_EARTH = 0.5;
 const double_t COLLISION_LAG_SPACESHIP = 1.;
 const double_t EARTH_RADIUS_OFFSET = 15.;
+const float_t ASTEROID_VELOCITY_UPDATE = 40;
 
 
 Vector2 get_direction(float_t);
@@ -106,6 +107,6 @@ struct Earth {
 
     Earth();
     void Draw(const Texture2D&);
-    void check_collison_update(Asteroid&, Scoreboard&);
+    void check_collison_update(Asteroid&, Scoreboard&, const uint8_t&);
 };
 

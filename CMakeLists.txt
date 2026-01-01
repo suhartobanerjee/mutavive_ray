@@ -6,7 +6,6 @@ project(mutavive
 )
 
 set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build)
 set(CMAKE_CXX_FLAGS "-Wall")
 
 add_executable(${CMAKE_PROJECT_NAME}

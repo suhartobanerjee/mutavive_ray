@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cmath>
 // #include <cstdint>
+#include <cstdint>
 #include <random>
 #include "components.h"
 #include "../dependencies/raylib-5.5_macos/include/raylib.h"
@@ -55,7 +56,7 @@ Asteroid::Asteroid() : bounds(ASTEROID_RADIUS, Shapes::CIRCLE) {
         texture_height
     };
     origin = Vector2 { texture_width / 2.0f, texture_height / 2.0f };
-    velocity = 100.;
+    velocity = 80.;
     circumference = std::uniform_real_distribution<float_t>(0.0, TAU);
     angle = circumference(rng);
     direction = get_direction(angle);
@@ -236,7 +237,7 @@ void Earth::Draw(const Texture2D& texture) {
             WHITE);
 }
 
-void Earth::check_collison_update(Asteroid& asteroid, Scoreboard& scoreboard) {
+void Earth::check_collison_update(Asteroid& asteroid, Scoreboard& scoreboard, const uint8_t& level) {
     if (asteroid.bounced_timer > 0) {
         asteroid.bounced_timer -= GetFrameTime();
         return;
@@ -252,6 +253,6 @@ void Earth::check_collison_update(Asteroid& asteroid, Scoreboard& scoreboard) {
         asteroid.bounced_timer = COLLISION_LAG_EARTH;
         asteroid.direction = asteroid.reverse_direction();
         asteroid.translate += asteroid.direction * asteroid.velocity * GetFrameTime();
-        scoreboard.score--;
+        scoreboard.score -= level;
     }    
 }
