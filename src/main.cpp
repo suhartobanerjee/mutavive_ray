@@ -12,6 +12,8 @@ int main (int argc, char *argv[]) {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "MutaVive: mutate to survive!");
     SetTargetFPS(TARGET_FPS);
 
+    Font font = LoadFontEx("../Atkinson_Hyperlegible_Mono/static/AtkinsonHyperlegibleMono-SemiBold.ttf", 96, 0, 0);
+
     const int n_asteroids = 10;
     Asteroid asteroids[n_asteroids];
     for (int i = 0; i < n_asteroids; ++i) {
@@ -35,6 +37,19 @@ int main (int argc, char *argv[]) {
     // Main game loop
     while (!WindowShouldClose())
     {
+        // splash screen telling rules
+        while (level == 0 && !IsKeyDown(KEY_SPACE)) {
+            BeginDrawing();
+            ClearBackground(GRAY);
+            DrawTextEx(
+                    font,
+                    TextFormat("Earth is under severe attack from a hoarde of asteroids.\nIt is your job to strap on your seatbelts, fly out into the\nlower earth orbit and save earth from near destruction\nEvery asteroid you hit, you get a point\nand the asteroid turns 180 degrees in direction\nAsteroids hitting earth will get damage equal to level\nLets's see how far you can hold up and buy time\ntill your friends come in with an asteroid gun! Have Fun!\nPress space to start..."),
+                    Vector2 { 100., SCREEN_HEIGHT / 2. - 200. },
+                    36.,
+                    1.5, 
+                    BLACK);
+            EndDrawing();
+        }
         // Checking for game over == score == 0
         if (scoreboard.score < 0 && level > 0) {
             float_t end_screen = 3.;
@@ -42,7 +57,13 @@ int main (int argc, char *argv[]) {
                 end_screen -= GetFrameTime();
                 BeginDrawing();
                 ClearBackground(GRAY);
-                DrawText(TextFormat("Game over! Highest level reached is: %i", highest_level), 300., SCREEN_HEIGHT / 2., 36, BLACK);
+                DrawTextEx(
+                        font,
+                        TextFormat("Game over! Highest level reached is: %i", highest_level),
+                        Vector2 { 300. , SCREEN_HEIGHT / 2. },
+                        36.,
+                        1.5, 
+                        BLACK);
                 EndDrawing();
             }
             break;
@@ -55,7 +76,13 @@ int main (int argc, char *argv[]) {
                 pause_timer -= GetFrameTime();
                 BeginDrawing();
                 ClearBackground(GRAY);
-                DrawText(TextFormat("Level: %i", level), SCREEN_WIDTH / 2. - 50., SCREEN_HEIGHT / 2., 36, BLACK);
+                DrawTextEx(
+                        font,
+                        TextFormat("Level: %i", level),
+                        Vector2 { SCREEN_WIDTH / 2. - 50., SCREEN_HEIGHT / 2. },
+                        36.,
+                        1.5, 
+                        BLACK);
                 EndDrawing();
             }
             pause_timer = PAUSE_TIMER;
